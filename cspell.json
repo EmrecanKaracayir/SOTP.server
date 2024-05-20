@@ -1,0 +1,31 @@
+{
+  "dictionaries": [],
+  "dictionaryDefinitions": [],
+  "ignorePaths": [],
+  "ignoreWords": [],
+  "import": [],
+  "version": "0.2",
+  "words": [
+    "codepaths",
+    "dbname",
+    "DGFA",
+    "ecma",
+    "Emrecan",
+    "JFVA",
+    "Karacayir",
+    "loget",
+    "Loget",
+    "LUFHJF",
+    "Nioy",
+    "postgres",
+    "protovalid",
+    "Protovalid",
+    "psql",
+    "PSWRD",
+    "RTOKEN",
+    "SKEY",
+    "tsbuildinfo",
+    "typedef",
+    "UGFA"
+  ]
+}
