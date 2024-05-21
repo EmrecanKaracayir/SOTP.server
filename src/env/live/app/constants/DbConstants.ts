@@ -3,7 +3,7 @@ import { Pool } from "pg";
 export class DbConstants {
   public static readonly POOL: Pool = new Pool({
     user: "USOTP",
-    host: "rds-gfa-database.czggso0ksewe.eu-central-1.rds.amazonaws.com",
+    host: "rds-sotp-database.czggso0ksewe.eu-central-1.rds.amazonaws.com",
     database: "DSOTP",
     port: 5432,
     ssl: {
