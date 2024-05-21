@@ -16,7 +16,7 @@ export class PairManager implements IManager {
     this.mProvider = new PairProvider();
   }
 
-  public async postLogin(
+  public async postPair(
     validatedData: PairRequest,
   ): Promise<ManagerResponse<PairResponse | null>> {
     // Try to get account
@@ -65,7 +65,7 @@ export class PairManager implements IManager {
     ) {
       throw new Error("Failed to create pair!");
     }
-    // Login success, return data
+    // Pairing success, return true
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,

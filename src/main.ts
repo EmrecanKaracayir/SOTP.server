@@ -6,6 +6,7 @@ import { LoggerMiddleware } from "./app/middlewares/LoggerMiddleware";
 import { MethodMiddleware } from "./app/middlewares/MethodMiddleware";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { PairBuilder } from "./core/pair/PairBuilder";
+import { DecryptBuilder } from "./core/decrypt/DecryptBuilder";
 
 // App
 const app: Express = express();
@@ -22,6 +23,10 @@ app.use(
 app.use(
   `${ConfigConstants.API_PREFIX}/${PairBuilder.BASE_ROUTE}`,
   new PairBuilder().router,
+);
+app.use(
+  `${ConfigConstants.API_PREFIX}/${DecryptBuilder.BASE_ROUTE}`,
+  new DecryptBuilder().router,
 );
 
 // Post-Middlewares

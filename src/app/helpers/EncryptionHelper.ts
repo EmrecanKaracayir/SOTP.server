@@ -38,7 +38,7 @@ export class EncryptionHelper implements IHelper {
     return [Buffer.from(shares[0]), Buffer.from(shares[1])];
   }
 
-  public static async combineKey(
+  public static async combineKeySegments(
     share1: Buffer,
     share2: Buffer,
   ): Promise<Buffer> {

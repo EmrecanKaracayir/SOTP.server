@@ -43,6 +43,9 @@ export enum ClientErrorCode {
   INCORRECT_PASSWORD = 80005,
   //  *  *  801XX: /pair errors
   NO_PAIR_ACCOUNT_FOUND = 80100,
+  //  *  *  802XX: /decrypt errors
+  NO_PAIR_FOUND = 80200,
+  INVALID_PAIR_SOTP = 80201,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -82,6 +85,9 @@ const clientErrorMessages: ClientErrorCodeMap<string> = {
   //  *  *  801XX: /pair errors
   [ClientErrorCode.NO_PAIR_ACCOUNT_FOUND]:
     "No account was found with the provided pair username.",
+  //  *  *  802XX: /decrypt errors
+  [ClientErrorCode.NO_PAIR_FOUND]: "No pair was found.",
+  [ClientErrorCode.INVALID_PAIR_SOTP]: "Provided pair SOTP was invalid.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]:
     "The requested resource couldn't be found.",

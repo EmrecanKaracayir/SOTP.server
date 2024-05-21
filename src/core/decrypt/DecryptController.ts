@@ -5,22 +5,22 @@ import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
-import { PairManager } from "./PairManager";
-import { PairRequest } from "./schemas/PairRequest";
-import type { PairResponse } from "./schemas/PairResponse";
+import { DecryptManager } from "./DecryptManager";
+import { DecryptRequest } from "./schemas/DecryptRequest";
+import type { DecryptResponse } from "./schemas/DecryptResponse";
 
-export class PairController implements IController {
-  private readonly mManager: PairManager;
+export class DecryptController implements IController {
+  private readonly mManager: DecryptManager;
 
   constructor() {
-    this.mManager = new PairManager();
+    this.mManager = new DecryptManager();
   }
 
-  public async postPair(
+  public async postDecrypt(
     req: ExpressRequest,
-    res: ControllerResponse<PairResponse | null>,
+    res: ControllerResponse<DecryptResponse | null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<PairResponse | null> | void> {
+  ): Promise<ControllerResponse<DecryptResponse | null> | void> {
     try {
       const preliminaryData: unknown = req.body;
       // V1: Existence validation
@@ -35,7 +35,7 @@ export class PairController implements IController {
       }
       const protovalidData: unknown = preliminaryData;
       // V2: Schematic validation
-      if (!PairRequest.isBlueprint(protovalidData)) {
+      if (!DecryptRequest.isBlueprint(protovalidData)) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
@@ -44,10 +44,10 @@ export class PairController implements IController {
           null,
         );
       }
-      const blueprintData: PairRequest = protovalidData;
+      const blueprintData: DecryptRequest = protovalidData;
       // V3: Physical validation
       const validationErrors: ClientError[] =
-        PairRequest.getValidationErrors(blueprintData);
+        DecryptRequest.getValidationErrors(blueprintData);
       if (validationErrors.length > 0) {
         return ResponseUtil.controllerResponse(
           res,
@@ -57,10 +57,10 @@ export class PairController implements IController {
           null,
         );
       }
-      const validatedData: PairRequest = blueprintData;
+      const validatedData: DecryptRequest = blueprintData;
       // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<PairResponse | null> =
-        await this.mManager.postPair(validatedData);
+      const managerResponse: ManagerResponse<DecryptResponse | null> =
+        await this.mManager.postDecrypt(validatedData);
       // Respond
       return res.status(managerResponse.httpStatus.code).send({
         httpStatus: managerResponse.httpStatus,
