@@ -4,7 +4,7 @@ import { CatcherMiddleware } from "./app/middlewares/CatcherMiddleware";
 import { FailureMiddleware } from "./app/middlewares/FailureMiddleware";
 import { LoggerMiddleware } from "./app/middlewares/LoggerMiddleware";
 import { MethodMiddleware } from "./app/middlewares/MethodMiddleware";
-import { LogetBuilder } from "./core/login/LoginBuilder";
+import { LoginBuilder } from "./core/login/LoginBuilder";
 
 // App
 const app: Express = express();
@@ -15,8 +15,8 @@ app.use(LoggerMiddleware.log);
 
 // Routes without authentication
 app.use(
-  `${ConfigConstants.API_PREFIX}/${LogetBuilder.BASE_ROUTE}`,
-  new LogetBuilder().router,
+  `${ConfigConstants.API_PREFIX}/${LoginBuilder.BASE_ROUTE}`,
+  new LoginBuilder().router,
 );
 
 // Post-Middlewares
