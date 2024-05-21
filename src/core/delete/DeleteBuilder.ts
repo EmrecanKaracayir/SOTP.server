@@ -5,7 +5,7 @@ import { IBuilder } from "../../app/interfaces/IBuilder";
 import { DeleteController } from "./DeleteController";
 
 export class DeleteBuilder implements IBuilder {
-  public static readonly BASE_ROUTE: string = "login";
+  public static readonly BASE_ROUTE: string = "delete";
 
   public readonly router: Router;
 
