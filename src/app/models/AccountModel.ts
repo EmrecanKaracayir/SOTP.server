@@ -9,7 +9,7 @@ export class AccountModel implements IModel {
     public readonly accountId: number,
     public readonly username: string,
     public readonly password: string,
-    public readonly sotp: string,
+    public readonly sharedOtp: string,
   ) {}
 
   public static fromRecord(record: unknown): AccountModel {
@@ -23,7 +23,7 @@ export class AccountModel implements IModel {
       record.accountId,
       record.username,
       record.password,
-      record.sotp,
+      record.sharedOtp,
     );
   }
 
@@ -45,7 +45,7 @@ export class AccountModel implements IModel {
       typeof model.accountId === "number" &&
       typeof model.username === "string" &&
       typeof model.password === "string" &&
-      typeof model.sotp === "string"
+      typeof model.sharedOtp === "string"
     );
   }
 
