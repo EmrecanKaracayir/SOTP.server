@@ -99,5 +99,5 @@ enum Queries {
   GET_ACCOUNT$AID = `SELECT * FROM "Account" WHERE "accountId" = $1;`,
   GET_PAIR_ACCOUNT$UNAME = `SELECT * FROM "Account" WHERE "username" = $1;`,
   GET_PAIR_DOC$AID = `SELECT * FROM "PairDocView" WHERE "firstAccountId" = $1 OR "secondAccountId" = $1;`,
-  VALIDATE_SOTP$AID = `SELECT * FROM "Account" WHERE "accountId" = $1 AND "sotp" = $2;`,
+  VALIDATE_SOTP$AID = `SELECT * FROM "Account" WHERE "accountId" = $1 AND "sharedOtp" = $2;`,
 }
