@@ -38,14 +38,11 @@ export enum ClientErrorCode {
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
-  //  *  *  800XX: /loget errors
+  //  *  *  800XX: /login errors
   NO_ACCOUNT_FOUND = 80004,
   INCORRECT_PASSWORD = 80005,
-  NO_BRANCH_FOUND = 80006,
-  INVALID_PHYSICAL_LOCATION = 80007,
-  BRANCH_HAS_NO_EMPLOYEES = 80008,
-  INVALID_LOGICAL_LOCATION = 80009,
-  BRANCH_HAS_NO_DOCUMENTS = 80010,
+  //  *  *  801XX: /pair errors
+  NO_PAIR_ACCOUNT_FOUND = 80100,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -78,19 +75,13 @@ const clientErrorMessages: ClientErrorCodeMap<string> = {
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
-  //  *  *  800XX: /loget errors
+  //  *  *  800XX: /login errors
   [ClientErrorCode.NO_ACCOUNT_FOUND]:
     "No account was found with the provided username.",
   [ClientErrorCode.INCORRECT_PASSWORD]: "Provided password was incorrect.",
-  [ClientErrorCode.NO_BRANCH_FOUND]:
-    "No branch was found with the registered employee.",
-  [ClientErrorCode.INVALID_PHYSICAL_LOCATION]:
-    "Provided physical location was invalid.",
-  [ClientErrorCode.BRANCH_HAS_NO_EMPLOYEES]:
-    "Branch has no employees registered.",
-  [ClientErrorCode.INVALID_LOGICAL_LOCATION]:
-    "Provided logical location was invalid.",
-  [ClientErrorCode.BRANCH_HAS_NO_DOCUMENTS]: "Branch has no documents to get.",
+  //  *  *  801XX: /pair errors
+  [ClientErrorCode.NO_PAIR_ACCOUNT_FOUND]:
+    "No account was found with the provided pair username.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]:
     "The requested resource couldn't be found.",

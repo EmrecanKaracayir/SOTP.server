@@ -198,8 +198,8 @@ ALTER TABLE ONLY public."Pair" ALTER COLUMN "pairId" SET DEFAULT nextval('public
 --
 
 COPY public."Account" ("accountId", username, password, "sharedOtp") FROM stdin;
-1	emrecan	1231230Aa.	859241
 2	onur	1231230Aa.	730268
+1	emrecan	1231230Aa.	127982
 \.
 
 
@@ -230,14 +230,14 @@ SELECT pg_catalog.setval('public."Account_accountId_seq"', 2, true);
 -- Name: Document_documentId_seq; Type: SEQUENCE SET; Schema: public; Owner: USOTP
 --
 
-SELECT pg_catalog.setval('public."Document_documentId_seq"', 1, false);
+SELECT pg_catalog.setval('public."Document_documentId_seq"', 1, true);
 
 
 --
 -- Name: Pair_pairId_seq; Type: SEQUENCE SET; Schema: public; Owner: USOTP
 --
 
-SELECT pg_catalog.setval('public."Pair_pairId_seq"', 1, false);
+SELECT pg_catalog.setval('public."Pair_pairId_seq"', 1, true);
 
 
 --

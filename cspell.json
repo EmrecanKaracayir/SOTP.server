@@ -23,6 +23,7 @@
     "psql",
     "PSWRD",
     "RTOKEN",
+    "Shamir",
     "SKEY",
     "sotp",
     "tsbuildinfo",
