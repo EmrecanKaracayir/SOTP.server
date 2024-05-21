@@ -208,7 +208,6 @@ COPY public."Account" ("accountId", username, password, "sharedOtp") FROM stdin;
 --
 
 COPY public."Document" ("documentId", content) FROM stdin;
-2	NQAIfY8BPczYqEuVVHEWd+2XEta5cyLihw6YzrPGehg=
 \.
 
 
@@ -217,7 +216,6 @@ COPY public."Document" ("documentId", content) FROM stdin;
 --
 
 COPY public."Pair" ("pairId", "firstAccountId", "secondAccountId", "documentId", "firstKeySegment", "secondKeySegment") FROM stdin;
-2	1	2	2	5So88zf+/ZzalyU3Y8hDqDPzVjqzl/JcywK6Qwtt5K/W	1Qw/NudEb8zL13u32daq/mivPNrINd1DsvApQMcqmcTS
 \.
 
 
