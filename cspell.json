@@ -24,6 +24,7 @@
     "PSWRD",
     "RTOKEN",
     "SKEY",
+    "sotp",
     "tsbuildinfo",
     "typedef",
     "UGFA"

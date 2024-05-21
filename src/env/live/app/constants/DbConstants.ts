@@ -2,9 +2,9 @@ import { Pool } from "pg";
 
 export class DbConstants {
   public static readonly POOL: Pool = new Pool({
-    user: "UGFA",
+    user: "USOTP",
     host: "rds-gfa-database.czggso0ksewe.eu-central-1.rds.amazonaws.com",
-    database: "DGFA",
+    database: "DSOTP",
     port: 5432,
     ssl: {
       rejectUnauthorized: false,

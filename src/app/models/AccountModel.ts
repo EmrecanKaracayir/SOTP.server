@@ -4,55 +4,52 @@ import {
   UnexpectedQueryResultError,
 } from "../schemas/ServerError";
 
-export class EmployeeModel implements IModel {
+export class AccountModel implements IModel {
   private constructor(
-    public readonly employeeId: number,
+    public readonly accountId: number,
     public readonly username: string,
     public readonly password: string,
-    public readonly branchId: number,
-    public readonly btMac: string,
+    public readonly sotp: string,
   ) {}
 
-  public static fromRecord(record: unknown): EmployeeModel {
+  public static fromRecord(record: unknown): AccountModel {
     if (!record) {
       throw new UnexpectedQueryResultError();
     }
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
-    return new EmployeeModel(
-      record.employeeId,
+    return new AccountModel(
+      record.accountId,
       record.username,
       record.password,
-      record.branchId,
-      record.btMac,
+      record.sotp,
     );
   }
 
-  public static fromRecords(records: unknown[]): EmployeeModel[] {
+  public static fromRecords(records: unknown[]): AccountModel[] {
     if (!this.areValidModels(records)) {
       throw new ModelMismatchError(records);
     }
     return records.map(
-      (record: unknown): EmployeeModel => this.fromRecord(record),
+      (record: unknown): AccountModel => this.fromRecord(record),
     );
   }
 
-  private static isValidModel(data: unknown): data is EmployeeModel {
+  private static isValidModel(data: unknown): data is AccountModel {
     if (typeof data !== "object" || data === null) {
       return false;
     }
-    const model: EmployeeModel = data as EmployeeModel;
+    const model: AccountModel = data as AccountModel;
     return (
-      typeof model.employeeId === "number" &&
+      typeof model.accountId === "number" &&
       typeof model.username === "string" &&
       typeof model.password === "string" &&
-      typeof model.branchId === "number" &&
-      typeof model.btMac === "string"
+      typeof model.sotp === "string"
     );
   }
 
-  private static areValidModels(data: unknown[]): data is EmployeeModel[] {
+  private static areValidModels(data: unknown[]): data is AccountModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

@@ -4,7 +4,7 @@ import { CatcherMiddleware } from "./app/middlewares/CatcherMiddleware";
 import { FailureMiddleware } from "./app/middlewares/FailureMiddleware";
 import { LoggerMiddleware } from "./app/middlewares/LoggerMiddleware";
 import { MethodMiddleware } from "./app/middlewares/MethodMiddleware";
-import { LogetBuilder } from "./core/loget/LogetBuilder";
+import { LogetBuilder } from "./core/login/LoginBuilder";
 
 // App
 const app: Express = express();

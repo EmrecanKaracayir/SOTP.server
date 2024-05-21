@@ -2,9 +2,9 @@ import { Pool } from "pg";
 
 export class DbConstants {
   public static readonly POOL: Pool = new Pool({
-    user: "UGFA",
+    user: "USOTP",
     host: "localhost",
-    database: "DGFA",
+    database: "DSOTP",
     port: 5432,
   });
   public static readonly BEGIN: string = "BEGIN";

@@ -5,22 +5,22 @@ import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
-import { LogetManager } from "./LogetManager";
-import { LogetRequest } from "./schemas/LogetRequest";
-import { LogetResponse } from "./schemas/LogetResponse";
+import { LoginManager } from "./LoginManager";
+import { LoginRequest } from "./schemas/LoginRequest";
+import { LoginResponse } from "./schemas/LoginResponse";
 
-export class LogetController implements IController {
-  private readonly mManager: LogetManager;
+export class LoginController implements IController {
+  private readonly mManager: LoginManager;
 
   constructor() {
-    this.mManager = new LogetManager();
+    this.mManager = new LoginManager();
   }
 
   public async postLogin(
     req: ExpressRequest,
-    res: ControllerResponse<LogetResponse | null>,
+    res: ControllerResponse<LoginResponse | null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<LogetResponse | null> | void> {
+  ): Promise<ControllerResponse<LoginResponse | null> | void> {
     try {
       const preliminaryData: unknown = req.body;
       // V1: Existence validation
@@ -35,7 +35,7 @@ export class LogetController implements IController {
       }
       const protovalidData: unknown = preliminaryData;
       // V2: Schematic validation
-      if (!LogetRequest.isBlueprint(protovalidData)) {
+      if (!LoginRequest.isBlueprint(protovalidData)) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
@@ -44,10 +44,10 @@ export class LogetController implements IController {
           null,
         );
       }
-      const blueprintData: LogetRequest = protovalidData;
+      const blueprintData: LoginRequest = protovalidData;
       // V3: Physical validation
       const validationErrors: ClientError[] =
-        LogetRequest.getValidationErrors(blueprintData);
+        LoginRequest.getValidationErrors(blueprintData);
       if (validationErrors.length > 0) {
         return ResponseUtil.controllerResponse(
           res,
@@ -57,9 +57,9 @@ export class LogetController implements IController {
           null,
         );
       }
-      const validatedData: LogetRequest = blueprintData;
+      const validatedData: LoginRequest = blueprintData;
       // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<LogetResponse | null> =
+      const managerResponse: ManagerResponse<LoginResponse | null> =
         await this.mManager.postLogin(validatedData);
       // Respond
       return res.status(managerResponse.httpStatus.code).send({

@@ -2,25 +2,25 @@ import { Router } from "express";
 import { Method } from "../../app/enums/Method";
 import { RouteHelper } from "../../app/helpers/RouteHelper";
 import { IBuilder } from "../../app/interfaces/IBuilder";
-import { LogetController } from "./LogetController";
+import { LoginController } from "./LoginController";
 
-export class LogetBuilder implements IBuilder {
-  public static readonly BASE_ROUTE: string = "loget";
+export class LoginBuilder implements IBuilder {
+  public static readonly BASE_ROUTE: string = "login";
 
   public readonly router: Router;
 
-  private readonly mController: LogetController;
+  private readonly mController: LoginController;
 
   constructor() {
     this.router = Router();
-    this.mController = new LogetController();
+    this.mController = new LoginController();
     this.buildRoutes();
   }
 
   private buildRoutes(): void {
     RouteHelper.buildRoute(
       this.router,
-      { baseRoute: LogetBuilder.BASE_ROUTE, route: "/" },
+      { baseRoute: LoginBuilder.BASE_ROUTE, route: "/" },
       Method.POST,
       this.mController.postLogin.bind(this.mController),
     );

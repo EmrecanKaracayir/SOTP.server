@@ -17,15 +17,15 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: DGFA; Type: DATABASE; Schema: -; Owner: UGFA
+-- Name: DSOTP; Type: DATABASE; Schema: -; Owner: USOTP
 --
 
-CREATE DATABASE "DGFA" WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'en_US.UTF-8';
+CREATE DATABASE "DSOTP" WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'en_US.UTF-8';
 
 
-ALTER DATABASE "DGFA" OWNER TO "UGFA";
+ALTER DATABASE "DSOTP" OWNER TO "USOTP";
 
-\connect "DGFA"
+\connect "DSOTP"
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -43,88 +43,24 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: Branch; Type: TABLE; Schema: public; Owner: UGFA
+-- Name: Account; Type: TABLE; Schema: public; Owner: USOTP
 --
 
-CREATE TABLE public."Branch" (
-    "branchId" integer NOT NULL,
-    name character varying(256) NOT NULL,
-    "companyId" integer NOT NULL,
-    y0 double precision NOT NULL,
-    y1 double precision NOT NULL,
-    x0 double precision NOT NULL,
-    x1 double precision NOT NULL
-);
-
-
-ALTER TABLE public."Branch" OWNER TO "UGFA";
-
---
--- Name: Branch_branchId_seq; Type: SEQUENCE; Schema: public; Owner: UGFA
---
-
-CREATE SEQUENCE public."Branch_branchId_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public."Branch_branchId_seq" OWNER TO "UGFA";
-
---
--- Name: Branch_branchId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UGFA
---
-
-ALTER SEQUENCE public."Branch_branchId_seq" OWNED BY public."Branch"."branchId";
-
-
---
--- Name: Employee; Type: TABLE; Schema: public; Owner: UGFA
---
-
-CREATE TABLE public."Employee" (
-    "employeeId" integer NOT NULL,
+CREATE TABLE public."Account" (
+    "accountId" integer NOT NULL,
     username character varying(256) NOT NULL,
     password character varying(256) NOT NULL,
-    "branchId" integer NOT NULL,
-    "btMac" character varying(17) NOT NULL
+    "sharedOtp" character varying(6) NOT NULL
 );
 
 
-ALTER TABLE public."Employee" OWNER TO "UGFA";
+ALTER TABLE public."Account" OWNER TO "USOTP";
 
 --
--- Name: BtMacsView; Type: VIEW; Schema: public; Owner: UGFA
+-- Name: Account_accountId_seq; Type: SEQUENCE; Schema: public; Owner: USOTP
 --
 
-CREATE VIEW public."BtMacsView" AS
- SELECT "branchId",
-    "btMac"
-   FROM public."Employee";
-
-
-ALTER VIEW public."BtMacsView" OWNER TO "UGFA";
-
---
--- Name: Company; Type: TABLE; Schema: public; Owner: UGFA
---
-
-CREATE TABLE public."Company" (
-    "companyId" integer NOT NULL,
-    name character varying(256) NOT NULL
-);
-
-
-ALTER TABLE public."Company" OWNER TO "UGFA";
-
---
--- Name: Company_companyid_seq; Type: SEQUENCE; Schema: public; Owner: UGFA
---
-
-CREATE SEQUENCE public."Company_companyid_seq"
+CREATE SEQUENCE public."Account_accountId_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -133,30 +69,29 @@ CREATE SEQUENCE public."Company_companyid_seq"
     CACHE 1;
 
 
-ALTER SEQUENCE public."Company_companyid_seq" OWNER TO "UGFA";
+ALTER SEQUENCE public."Account_accountId_seq" OWNER TO "USOTP";
 
 --
--- Name: Company_companyid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UGFA
+-- Name: Account_accountId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: USOTP
 --
 
-ALTER SEQUENCE public."Company_companyid_seq" OWNED BY public."Company"."companyId";
+ALTER SEQUENCE public."Account_accountId_seq" OWNED BY public."Account"."accountId";
 
 
 --
--- Name: Document; Type: TABLE; Schema: public; Owner: UGFA
+-- Name: Document; Type: TABLE; Schema: public; Owner: USOTP
 --
 
 CREATE TABLE public."Document" (
     "documentId" integer NOT NULL,
-    "branchId" integer NOT NULL,
     content character varying NOT NULL
 );
 
 
-ALTER TABLE public."Document" OWNER TO "UGFA";
+ALTER TABLE public."Document" OWNER TO "USOTP";
 
 --
--- Name: Document_documentId_seq; Type: SEQUENCE; Schema: public; Owner: UGFA
+-- Name: Document_documentId_seq; Type: SEQUENCE; Schema: public; Owner: USOTP
 --
 
 CREATE SEQUENCE public."Document_documentId_seq"
@@ -168,20 +103,58 @@ CREATE SEQUENCE public."Document_documentId_seq"
     CACHE 1;
 
 
-ALTER SEQUENCE public."Document_documentId_seq" OWNER TO "UGFA";
+ALTER SEQUENCE public."Document_documentId_seq" OWNER TO "USOTP";
 
 --
--- Name: Document_documentId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UGFA
+-- Name: Document_documentId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: USOTP
 --
 
 ALTER SEQUENCE public."Document_documentId_seq" OWNED BY public."Document"."documentId";
 
 
 --
--- Name: Employee_employeeId_seq; Type: SEQUENCE; Schema: public; Owner: UGFA
+-- Name: Pair; Type: TABLE; Schema: public; Owner: USOTP
 --
 
-CREATE SEQUENCE public."Employee_employeeId_seq"
+CREATE TABLE public."Pair" (
+    "pairId" integer NOT NULL,
+    "firstAccountId" integer NOT NULL,
+    "secondAccountId" integer NOT NULL,
+    "documentId" integer NOT NULL,
+    "firstKeySegment" character varying NOT NULL,
+    "secondKeySegment" character varying NOT NULL
+);
+
+
+ALTER TABLE public."Pair" OWNER TO "USOTP";
+
+--
+-- Name: PairDocView; Type: VIEW; Schema: public; Owner: USOTP
+--
+
+CREATE VIEW public."PairDocView" AS
+ SELECT p."pairId",
+    p."firstAccountId",
+    a1.username AS "firstUsername",
+    p."secondAccountId",
+    a2.username AS "secondUsername",
+    p."firstKeySegment",
+    p."secondKeySegment",
+    p."documentId",
+    d.content
+   FROM (((public."Pair" p
+     JOIN public."Document" d ON ((p."documentId" = d."documentId")))
+     JOIN public."Account" a1 ON ((p."firstAccountId" = a1."accountId")))
+     JOIN public."Account" a2 ON ((p."secondAccountId" = a2."accountId")));
+
+
+ALTER VIEW public."PairDocView" OWNER TO "USOTP";
+
+--
+-- Name: Pair_pairId_seq; Type: SEQUENCE; Schema: public; Owner: USOTP
+--
+
+CREATE SEQUENCE public."Pair_pairId_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -190,174 +163,137 @@ CREATE SEQUENCE public."Employee_employeeId_seq"
     CACHE 1;
 
 
-ALTER SEQUENCE public."Employee_employeeId_seq" OWNER TO "UGFA";
+ALTER SEQUENCE public."Pair_pairId_seq" OWNER TO "USOTP";
 
 --
--- Name: Employee_employeeId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UGFA
+-- Name: Pair_pairId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: USOTP
 --
 
-ALTER SEQUENCE public."Employee_employeeId_seq" OWNED BY public."Employee"."employeeId";
-
-
---
--- Name: Branch branchId; Type: DEFAULT; Schema: public; Owner: UGFA
---
-
-ALTER TABLE ONLY public."Branch" ALTER COLUMN "branchId" SET DEFAULT nextval('public."Branch_branchId_seq"'::regclass);
+ALTER SEQUENCE public."Pair_pairId_seq" OWNED BY public."Pair"."pairId";
 
 
 --
--- Name: Company companyId; Type: DEFAULT; Schema: public; Owner: UGFA
+-- Name: Account accountId; Type: DEFAULT; Schema: public; Owner: USOTP
 --
 
-ALTER TABLE ONLY public."Company" ALTER COLUMN "companyId" SET DEFAULT nextval('public."Company_companyid_seq"'::regclass);
+ALTER TABLE ONLY public."Account" ALTER COLUMN "accountId" SET DEFAULT nextval('public."Account_accountId_seq"'::regclass);
 
 
 --
--- Name: Document documentId; Type: DEFAULT; Schema: public; Owner: UGFA
+-- Name: Document documentId; Type: DEFAULT; Schema: public; Owner: USOTP
 --
 
 ALTER TABLE ONLY public."Document" ALTER COLUMN "documentId" SET DEFAULT nextval('public."Document_documentId_seq"'::regclass);
 
 
 --
--- Name: Employee employeeId; Type: DEFAULT; Schema: public; Owner: UGFA
+-- Name: Pair pairId; Type: DEFAULT; Schema: public; Owner: USOTP
 --
 
-ALTER TABLE ONLY public."Employee" ALTER COLUMN "employeeId" SET DEFAULT nextval('public."Employee_employeeId_seq"'::regclass);
+ALTER TABLE ONLY public."Pair" ALTER COLUMN "pairId" SET DEFAULT nextval('public."Pair_pairId_seq"'::regclass);
 
 
 --
--- Data for Name: Branch; Type: TABLE DATA; Schema: public; Owner: UGFA
+-- Data for Name: Account; Type: TABLE DATA; Schema: public; Owner: USOTP
 --
 
-COPY public."Branch" ("branchId", name, "companyId", y0, y1, x0, x1) FROM stdin;
-1	Tinaztepe Campus	1	38.376517	38.365742	27.191847	27.21205
-2	Area 51	2	37.282188	37.212334	-115.824466	-115.777152
+COPY public."Account" ("accountId", username, password, "sharedOtp") FROM stdin;
+1	emrecan	1231230Aa.	859241
+2	onur	1231230Aa.	730268
 \.
 
 
 --
--- Data for Name: Company; Type: TABLE DATA; Schema: public; Owner: UGFA
+-- Data for Name: Document; Type: TABLE DATA; Schema: public; Owner: USOTP
 --
 
-COPY public."Company" ("companyId", name) FROM stdin;
-1	Dokuz Eylul University
-2	United States Air Force
+COPY public."Document" ("documentId", content) FROM stdin;
 \.
 
 
 --
--- Data for Name: Document; Type: TABLE DATA; Schema: public; Owner: UGFA
+-- Data for Name: Pair; Type: TABLE DATA; Schema: public; Owner: USOTP
 --
 
-COPY public."Document" ("documentId", "branchId", content) FROM stdin;
-1	1	Shhh... let's not leak our hard work!\nThis is a confidential information, sharing may result in legal consequences!\nWe'll be launching Project Titan on July the 2nd, please start preparations.
+COPY public."Pair" ("pairId", "firstAccountId", "secondAccountId", "documentId", "firstKeySegment", "secondKeySegment") FROM stdin;
 \.
 
 
 --
--- Data for Name: Employee; Type: TABLE DATA; Schema: public; Owner: UGFA
+-- Name: Account_accountId_seq; Type: SEQUENCE SET; Schema: public; Owner: USOTP
 --
 
-COPY public."Employee" ("employeeId", username, password, "branchId", "btMac") FROM stdin;
-1	tinaztepeLecturer	1231230Aa.	1	BC:A5:8B:3E:E5:A0
-2	tinaztepeEmployee	1231230Aa.	1	DC:21:48:E6:74:0D
-4	area51Alien	1231230Aa.	2	BC:A5:8B:3E:E5:A0
-6	area51Employee	1231230Aa.	2	DC:21:48:E6:74:0D
-\.
+SELECT pg_catalog.setval('public."Account_accountId_seq"', 2, true);
 
 
 --
--- Name: Branch_branchId_seq; Type: SEQUENCE SET; Schema: public; Owner: UGFA
+-- Name: Document_documentId_seq; Type: SEQUENCE SET; Schema: public; Owner: USOTP
 --
 
-SELECT pg_catalog.setval('public."Branch_branchId_seq"', 2, true);
-
-
---
--- Name: Company_companyid_seq; Type: SEQUENCE SET; Schema: public; Owner: UGFA
---
-
-SELECT pg_catalog.setval('public."Company_companyid_seq"', 2, true);
+SELECT pg_catalog.setval('public."Document_documentId_seq"', 1, false);
 
 
 --
--- Name: Document_documentId_seq; Type: SEQUENCE SET; Schema: public; Owner: UGFA
+-- Name: Pair_pairId_seq; Type: SEQUENCE SET; Schema: public; Owner: USOTP
 --
 
-SELECT pg_catalog.setval('public."Document_documentId_seq"', 1, true);
-
-
---
--- Name: Employee_employeeId_seq; Type: SEQUENCE SET; Schema: public; Owner: UGFA
---
-
-SELECT pg_catalog.setval('public."Employee_employeeId_seq"', 6, true);
+SELECT pg_catalog.setval('public."Pair_pairId_seq"', 1, false);
 
 
 --
--- Name: Branch branch_pk; Type: CONSTRAINT; Schema: public; Owner: UGFA
+-- Name: Account account_pk; Type: CONSTRAINT; Schema: public; Owner: USOTP
 --
 
-ALTER TABLE ONLY public."Branch"
-    ADD CONSTRAINT branch_pk PRIMARY KEY ("branchId");
-
-
---
--- Name: Company company_pk; Type: CONSTRAINT; Schema: public; Owner: UGFA
---
-
-ALTER TABLE ONLY public."Company"
-    ADD CONSTRAINT company_pk PRIMARY KEY ("companyId");
+ALTER TABLE ONLY public."Account"
+    ADD CONSTRAINT account_pk PRIMARY KEY ("accountId");
 
 
 --
--- Name: Document document; Type: CONSTRAINT; Schema: public; Owner: UGFA
+-- Name: Document document_pk; Type: CONSTRAINT; Schema: public; Owner: USOTP
 --
 
 ALTER TABLE ONLY public."Document"
-    ADD CONSTRAINT document PRIMARY KEY ("documentId");
+    ADD CONSTRAINT document_pk PRIMARY KEY ("documentId");
 
 
 --
--- Name: Employee employee_pk; Type: CONSTRAINT; Schema: public; Owner: UGFA
+-- Name: Pair pair_uk; Type: CONSTRAINT; Schema: public; Owner: USOTP
 --
 
-ALTER TABLE ONLY public."Employee"
-    ADD CONSTRAINT employee_pk PRIMARY KEY ("employeeId");
+ALTER TABLE ONLY public."Pair"
+    ADD CONSTRAINT pair_uk PRIMARY KEY ("pairId");
 
 
 --
--- Name: Employee username_uk; Type: CONSTRAINT; Schema: public; Owner: UGFA
+-- Name: Account username_uk; Type: CONSTRAINT; Schema: public; Owner: USOTP
 --
 
-ALTER TABLE ONLY public."Employee"
+ALTER TABLE ONLY public."Account"
     ADD CONSTRAINT username_uk UNIQUE (username);
 
 
 --
--- Name: Employee branch_fk; Type: FK CONSTRAINT; Schema: public; Owner: UGFA
+-- Name: Pair document_fk; Type: FK CONSTRAINT; Schema: public; Owner: USOTP
 --
 
-ALTER TABLE ONLY public."Employee"
-    ADD CONSTRAINT branch_fk FOREIGN KEY ("branchId") REFERENCES public."Branch"("branchId");
-
-
---
--- Name: Document branch_fk; Type: FK CONSTRAINT; Schema: public; Owner: UGFA
---
-
-ALTER TABLE ONLY public."Document"
-    ADD CONSTRAINT branch_fk FOREIGN KEY ("branchId") REFERENCES public."Branch"("branchId");
+ALTER TABLE ONLY public."Pair"
+    ADD CONSTRAINT document_fk FOREIGN KEY ("documentId") REFERENCES public."Document"("documentId");
 
 
 --
--- Name: Branch company_fk; Type: FK CONSTRAINT; Schema: public; Owner: UGFA
+-- Name: Pair firstAccountId_fk; Type: FK CONSTRAINT; Schema: public; Owner: USOTP
 --
 
-ALTER TABLE ONLY public."Branch"
-    ADD CONSTRAINT company_fk FOREIGN KEY ("companyId") REFERENCES public."Company"("companyId");
+ALTER TABLE ONLY public."Pair"
+    ADD CONSTRAINT "firstAccountId_fk" FOREIGN KEY ("firstAccountId") REFERENCES public."Account"("accountId");
+
+
+--
+-- Name: Pair secondAccountId_fk; Type: FK CONSTRAINT; Schema: public; Owner: USOTP
+--
+
+ALTER TABLE ONLY public."Pair"
+    ADD CONSTRAINT "secondAccountId_fk" FOREIGN KEY ("secondAccountId") REFERENCES public."Account"("accountId");
 
 
 --
